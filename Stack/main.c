@@ -10,11 +10,12 @@ int main()
     push(stack,3);
     stack = expandStack(stack,4);
     push(stack,8);
+    pop(stack);
     
     Stack* stack2 = createStack(3);
-    push(stack,123);
-    push(stack,98);
-    push(stack,000);
+    push(stack2,123);
+    push(stack2,98);
+    push(stack2,000);
     
 
     Stack* stackMerged = mergeStacks(stack,stack2);
