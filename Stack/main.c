@@ -1,4 +1,4 @@
-#include "stack.c"
+#include "stack.h"
 
 
 int main()
@@ -7,6 +7,7 @@ int main()
     push(stack,1);
     push(stack,5);
     push(stack,2);
+    stack = sortStack(stack);
     push(stack,3);
     stack = expandStack(stack,4);
     push(stack,8);
@@ -16,6 +17,7 @@ int main()
     push(stack2,123);
     push(stack2,98);
     push(stack2,000);
+
     
 
     Stack* stackMerged = mergeStacks(stack,stack2);
@@ -26,5 +28,8 @@ int main()
     displayStack(stackMerged);
     deleteStack(&stackMerged);
     displayStack(stackMerged);
+
+    deleteStack(&stack);
+    deleteStack(&stack2);
 
 }
