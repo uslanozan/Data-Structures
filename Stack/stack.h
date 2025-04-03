@@ -30,6 +30,6 @@ Stack* copyStack(Stack* stack);  //? bitti
 Stack* mergeStacks(Stack* stack1, Stack* stack2);  //? bitti
 void shrinkStack(Stack* stack);  //? bitti
 Stack* sortStack(Stack* stack);  //todo: tekrar bakılacak
-void deleteStack(Stack** stack);  //? bitti
+void deleteStack(Stack** stack);
 
 #endif // STACK_H

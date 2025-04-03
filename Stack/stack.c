@@ -148,8 +148,8 @@ void deleteItem(Stack* stack, int item){
 
         gap = (stack->top - itemIndex);
         printf("%d", gap); 
-        Stack* tempStack = createStack(gap);
-        tempStack->capacity = gap;
+        Stack* tempStack = createStack(stack->top - itemIndex);
+        tempStack->capacity = stack->top - itemIndex;
         tempStack->top = -1;
 
 
@@ -167,8 +167,6 @@ void deleteItem(Stack* stack, int item){
         {
             push(stack, pop(tempStack));
         }
-
-        deleteStack(&tempStack);
         
 
     }else{
@@ -233,15 +231,15 @@ Stack* reverseStack(Stack* stack){
         return NULL;
     }
 
+    Stack* newStack = createStack(stack->capacity);
+    newStack->capacity = stack->capacity;
+    newStack->top = -1;
+
     if (isEmpty(stack))
     {
         printf("Stack is empty!\n");
         return NULL;
     }
-
-    Stack* newStack = createStack(stack->capacity);
-    newStack->capacity = stack->capacity;
-    newStack->top = -1;
 
     for (int i = stack->top; 0 <= i; i--)
     {
@@ -262,14 +260,7 @@ Stack* expandStack(Stack* stack, int extraCapacity){
 
 
     stack->capacity = stack->capacity + extraCapacity;
-    int *p1 = (int*) realloc(stack->data,(stack->capacity) * sizeof(int));
-    if (!p1)
-    {
-        printf("Expand Error");
-        return NULL;
-    }
-    
-    stack->data = p1;
+    stack->data = (int*) realloc(stack->data,(stack->capacity + extraCapacity) * sizeof(int));
 
     return stack;
 }
