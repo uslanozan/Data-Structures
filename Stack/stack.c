@@ -1,7 +1,7 @@
 #include "stack.h"
 
 // Create an integer Stack
-Stack* createStack(int capacity){
+Stack* createStack(int capacity) {
     //? Ne öğrendik: Stack için ayrı içerideki değerler için ayrı alan açmak gerekiyormuş
 
     Stack* stack = (Stack*)malloc(sizeof(Stack)); //Stack Structunu istediğimiz boyuta göre yer ayırıyor
@@ -10,7 +10,7 @@ Stack* createStack(int capacity){
         printf("Memory allocation failed!\n");
         exit(1); // Programı durdur
     }
-    
+
     stack->capacity = capacity;
     stack->top = -1;
     stack->data = (int*)malloc(capacity * sizeof(int));
@@ -41,10 +41,10 @@ void push(Stack* stack, int item) {
     // sayı zaten eklenmişse
     if (search(stack, item))
     {
-        printf("%d item is already added to stack.\n" , item);
+        printf("%d item is already added to stack.\n", item);
         return;
     }
-    
+
 
     stack->top++;   // Yeni eleman için top'u artır
     stack->data[stack->top] = item; // Elemanı ekle
@@ -68,13 +68,13 @@ int pop(Stack* stack) {
 
     int lastItem = stack->data[stack->top];
     stack->data[stack->top] = 0;  //! Sor. free yapmak gerekmez miydi ya da NULL kulanamaz mıyız.
-    stack->top--; 
-    
-    return lastItem; 
+    stack->top--;
+
+    return lastItem;
 }
 
 // Check is stack true
-bool isEmpty(Stack* stack){
+bool isEmpty(Stack* stack) {
 
     if (stack == NULL)
     {
@@ -85,13 +85,14 @@ bool isEmpty(Stack* stack){
     if (stack->top == -1)
     {
         return true;
-    }else{
+    }
+    else {
         return false;
     }
 }
 
 // Check an item is in stack
-bool search(Stack* stack, int item){
+bool search(Stack* stack, int item) {
 
     if (stack == NULL)
     {
@@ -116,7 +117,7 @@ bool search(Stack* stack, int item){
 }
 
 // Remove a specific item from stack
-void deleteItem(Stack* stack, int item){
+void deleteItem(Stack* stack, int item) {
 
     if (stack == NULL)
     {
@@ -133,7 +134,7 @@ void deleteItem(Stack* stack, int item){
     int itemIndex;
     int gap;
 
-    
+
     if (search(stack, item))
     {
         // Iterating over stack
@@ -147,9 +148,9 @@ void deleteItem(Stack* stack, int item){
         }
 
         gap = (stack->top - itemIndex);
-        printf("%d", gap); 
-        Stack* tempStack = createStack(stack->top - itemIndex);
-        tempStack->capacity = stack->top - itemIndex;
+        printf("%d", gap);
+        Stack* tempStack = createStack(gap);
+        tempStack->capacity = gap;
         tempStack->top = -1;
 
 
@@ -157,9 +158,9 @@ void deleteItem(Stack* stack, int item){
         for (int i = stack->top; itemIndex < i; i--)
         {
             // Çıkarılacak hariç hepsi stack'e eklendi
-            push(tempStack,pop(stack));
+            push(tempStack, pop(stack));
         }
-        
+
         // Çıkarılacak olan çıktı ama geçici stack'e eklenmedi.
         pop(stack);
 
@@ -167,16 +168,19 @@ void deleteItem(Stack* stack, int item){
         {
             push(stack, pop(tempStack));
         }
-        
 
-    }else{
+        deleteStack(&tempStack);
+
+
+    }
+    else {
         printf("There is no item %d", item);
         return;
     }
 }
 
 // Clear stack
-void clearStack(Stack* stack){
+void clearStack(Stack* stack) {
 
     if (stack == NULL)
     {
@@ -197,33 +201,33 @@ void clearStack(Stack* stack){
 }
 
 // Print stack with detaisl
-void displayStack(Stack* stack){
+void displayStack(Stack* stack) {
 
     if (stack == NULL)
     {
         printf("Stack is NULL!\n");
         return;
     }
-    
+
 
     if (isEmpty(stack))
     {
         printf("Stack is empty!\n");
         return;
     }
-    
-    printf("Stack includes %d items. %d item(s) can be added to stack\n", stack->top+1, stack->capacity - (stack->top+1) );
 
-    int i=stack->top;
+    printf("Stack includes %d items. %d item(s) can be added to stack\n", stack->top + 1, stack->capacity - (stack->top + 1));
 
-    while (i >= 0){
+    int i = stack->top;
+
+    while (i >= 0) {
         printf("| %d |\n", stack->data[i]);
         i--;
     }
 }
 
 // Reverse stack
-Stack* reverseStack(Stack* stack){
+Stack* reverseStack(Stack* stack) {
 
     if (stack == NULL)
     {
@@ -231,24 +235,26 @@ Stack* reverseStack(Stack* stack){
         return NULL;
     }
 
-    Stack* newStack = createStack(stack->capacity);
-
     if (isEmpty(stack))
     {
         printf("Stack is empty!\n");
-        return ;
+        return NULL;
     }
+
+    Stack* newStack = createStack(stack->capacity);
+    newStack->capacity = stack->capacity;
+    newStack->top = -1;
 
     for (int i = stack->top; 0 <= i; i--)
     {
         push(newStack, pop(stack));
     }
-    
+
     return newStack;
 }
 
 // Increase capacity of stack
-Stack* expandStack(Stack* stack, int extraCapacity){
+Stack* expandStack(Stack* stack, int extraCapacity) {
 
     if (stack == NULL)
     {
@@ -258,13 +264,20 @@ Stack* expandStack(Stack* stack, int extraCapacity){
 
 
     stack->capacity = stack->capacity + extraCapacity;
-    stack->data = (int*) realloc(stack->data,(stack->capacity + extraCapacity) * sizeof(int));
+    int* p1 = (int*)realloc(stack->data, (stack->capacity) * sizeof(int));
+    if (!p1)
+    {
+        printf("Expand Error");
+        return NULL;
+    }
+
+    stack->data = p1;
 
     return stack;
 }
 
 // Return top item of the stack
-int peek(Stack* stack){
+int peek(Stack* stack) {
 
     if (stack == NULL)
     {
@@ -276,25 +289,26 @@ int peek(Stack* stack){
     if (!isEmpty(stack))
     {
         return stack->data[stack->top];
-    }else{
+    }
+    else {
         printf("Stack is empty!");
         return -1;
     }
 }
 
 // Return item count of stack
-int size(Stack* stack){
+int size(Stack* stack) {
     if (stack == NULL)
     {
         printf("Stack is NULL!\n");
         return -1;
     }
 
-    return stack->top+1;
+    return stack->top + 1;
 }
 
 // Copy of stack
-Stack* copyStack(Stack* stack){
+Stack* copyStack(Stack* stack) {
 
     if (stack == NULL)
     {
@@ -304,37 +318,40 @@ Stack* copyStack(Stack* stack){
 
 
     Stack* newStack = createStack(stack->capacity);
+    newStack->capacity = stack->capacity;
     newStack->top = -1;
 
     for (int i = 0; i <= stack->top; i++)
     {
         push(newStack, stack->data[i]);
     }
-    
+
     return newStack;
 }
 
 // Merge 2 stacks into a stack
-Stack* mergeStacks(Stack* stack1, Stack* stack2){
+Stack* mergeStacks(Stack* stack1, Stack* stack2) {
 
     if (stack1 == NULL || stack2 == NULL)
     {
-        printf("%p or %p is NULL!\n",stack1,stack2);
+        printf("%p or %p is NULL!\n", stack1, stack2);
         return NULL;
     }
 
 
     Stack* mergedStack = createStack(stack1->capacity + stack2->capacity);
+    mergedStack->capacity = stack1->capacity + stack2->capacity;
+    mergedStack->top = -1;
 
     stack1 = reverseStack(stack1);
     stack2 = reverseStack(stack2);
-    
+
     for (int i = stack1->top; 0 <= stack1->top; i--)
     {
         push(mergedStack, pop(stack1));
     }
-    
-    
+
+
     for (int i = stack2->top; 0 <= stack2->top; i--)
     {
         push(mergedStack, pop(stack2));
@@ -344,7 +361,7 @@ Stack* mergeStacks(Stack* stack1, Stack* stack2){
 }
 
 // Clear empty spaces in stack (Shrink)
-void shrinkStack(Stack* stack){
+void shrinkStack(Stack* stack) {
 
     if (stack == NULL)
     {
@@ -358,13 +375,13 @@ void shrinkStack(Stack* stack){
     }
 
     stack->capacity = stack->top + 1;
-    stack->data = (int*) realloc(stack->data, stack->capacity * sizeof(int));
+    stack->data = (int*)realloc(stack->data, stack->capacity * sizeof(int));
 }
 
 
 // Sort stack
 //todo: kopya çekildi tekrar bakılacak
-Stack* sortStack(Stack* stack){
+Stack* sortStack(Stack* stack) {
 
     if (stack == NULL)
     {
@@ -376,31 +393,33 @@ Stack* sortStack(Stack* stack){
         printf("Stack is empty!\n");
         return stack;
     }
-    
+
 
 
     Stack* tempStack = createStack(stack->capacity);
+    tempStack->top = -1;
+    tempStack->capacity = stack->capacity;
     int tempVal;
 
     while (!isEmpty(stack))
     {
         tempVal = pop(stack);
-        while (!isEmpty(tempStack) && peek(tempStack) > tempVal){
+        while (!isEmpty(tempStack) && peek(tempStack) > tempVal) {
             push(stack, pop(tempStack));
         }
         push(tempStack, tempVal);
     }
-    
+
     return tempStack;
 }
 
 // Delete stack from memory
 //! burayı sor
-void deleteStack(Stack** stack){
+void deleteStack(Stack** stack) {
     if (*stack != NULL) {
         free((*stack)->data);  // Stack içindeki diziyi boşalt
         free(*stack);          // Stack’in kendisini boşalt
         *stack = NULL;         // Stack’i NULL yaparak kullanılmasını önle
     }
-    
+
 }

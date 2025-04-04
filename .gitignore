@@ -1,9 +1,14 @@
 #VS Code files
 .vscode
+#x64
 
+Data-Structures
 # Prerequisites
 *.d
-
+*.sln
+*.usr
+*.vcxproj*
+*.filters
 # Object files
 *.o
 *.ko
@@ -54,8 +59,3 @@ Module.symvers
 Mkfile.old
 dkms.conf
 /.vs
-/Data-Structures/x64/Debug
-/Data-Structures.sln
-/Data-Structures.vcxproj
-/Data-Structures.vcxproj.filters
-/Data-Structures.vcxproj.user
