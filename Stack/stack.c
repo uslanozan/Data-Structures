@@ -232,13 +232,11 @@ Stack* reverseStack(Stack* stack){
     }
 
     Stack* newStack = createStack(stack->capacity);
-    newStack->capacity = stack->capacity;
-    newStack->top = -1;
 
     if (isEmpty(stack))
     {
         printf("Stack is empty!\n");
-        return NULL;
+        return ;
     }
 
     for (int i = stack->top; 0 <= i; i--)
@@ -306,7 +304,6 @@ Stack* copyStack(Stack* stack){
 
 
     Stack* newStack = createStack(stack->capacity);
-    newStack->capacity = stack->capacity;
     newStack->top = -1;
 
     for (int i = 0; i <= stack->top; i++)
@@ -328,8 +325,6 @@ Stack* mergeStacks(Stack* stack1, Stack* stack2){
 
 
     Stack* mergedStack = createStack(stack1->capacity + stack2->capacity);
-    mergedStack->capacity = stack1->capacity + stack2->capacity;
-    mergedStack->top = -1;
 
     stack1 = reverseStack(stack1);
     stack2 = reverseStack(stack2);
@@ -385,8 +380,6 @@ Stack* sortStack(Stack* stack){
 
 
     Stack* tempStack = createStack(stack->capacity);
-    tempStack->top = -1;
-    tempStack->capacity = stack->capacity;
     int tempVal;
 
     while (!isEmpty(stack))
