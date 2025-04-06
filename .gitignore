@@ -59,3 +59,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 /.vs
+Data-Structures.aps
+*.rc
+/x64
+resource.h

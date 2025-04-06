@@ -8,7 +8,7 @@ Queue* createQueue(char name[]) {
 	}
 
 	if (strlen(name) >= sizeof(newQueue->queueName)) {
-		printf("Queue name cannot be longer than %lu\n", sizeof(newQueue->queueName) - 1);
+		printf("Queue name cannot be longer than %lu\n",(int) (sizeof(newQueue->queueName) - 1));
 		free(newQueue);
 		return NULL;
 	}
@@ -34,6 +34,7 @@ QueueNode* createQueueNode(int value) {
 	}
 
 	newNode->value = value;
+	newNode->next = NULL;
 	return newNode;
 }
 
@@ -105,5 +106,159 @@ void deleteFirstItem(Queue* queue) {
 	}
 
 	free(oldHead);
+	oldHead = NULL;
 	queue->length--;
+}
+//-----------------------------------------------------------------------------
+void displayQueue(Queue* queue) {
+
+	if (isQueueEmpty(queue))
+	{
+		printf("Queue is empty!\n");
+	}
+
+	if (isQueueNULL(queue))
+	{
+		printf("Queue is NULL!\n");
+	}
+
+	QueueNode* iterator = queue->head;
+	int index = 1;
+	
+	while (iterator != NULL) {
+		printf("%d. item is %d in %s\n", index, iterator->value, queue->queueName);
+		iterator = iterator->next;
+		index++;
+	}
+}
+//-----------------------------------------------------------------------------
+int peekFront(Queue* queue) {
+	return queue->head->value;
+}
+//-----------------------------------------------------------------------------
+int peekRear(Queue* queue) {
+	return queue->tail->value;
+}
+//-----------------------------------------------------------------------------
+bool checkItem(Queue* queue, int item) {
+	if (isQueueNULL(queue))
+	{
+		printf("Queue is NULL\n");
+		return false;
+	}
+
+	if (isQueueEmpty(queue))
+	{
+		printf("Queue is empty\n");
+		return false;
+	}
+
+	QueueNode* iterator = queue->head;
+
+	while (iterator != NULL) {
+		if (iterator->value == item)
+		{
+			return true;
+		}
+		iterator = iterator->next;
+	}
+	return false;
+}
+//-----------------------------------------------------------------------------
+int getQueueLength(Queue* queue) {
+	if (isQueueNULL(queue))
+	{
+		printf("Queue is NULL\n");
+		return -1;
+	}
+	return queue->length;
+}
+//-----------------------------------------------------------------------------
+Queue* copyQueue(Queue* original) {
+	if (isQueueNULL(original))
+	{
+		printf("Original queue is NULL\n");
+		return NULL;
+	}
+	Queue* newQueue = createQueue(original->queueName);
+
+	if (isQueueEmpty(original))
+	{
+		return newQueue;
+	}
+
+	QueueNode* iterator = original->head;
+
+	while (iterator != NULL) {
+		insertItem(newQueue, iterator->value);
+		iterator = iterator->next;
+	}
+
+	return newQueue;
+}
+
+//-----------------------------------------------------------------------------
+void editQueueName(Queue* queue, char newName[]) {
+	if (strlen(newName) >= sizeof(queue->queueName))
+	{
+		printf("New queue name cannot be longer than %lu\n", (int)(sizeof(queue->queueName) - 1));
+		return;
+	}
+	else
+	{
+		strncpy(queue->queueName, newName, sizeof(queue->queueName) - 1);
+		printf("Queue name is updated\n");
+	}
+}
+//-----------------------------------------------------------------------------
+Queue* mergeQueues(Queue* q1, Queue* q2, char name[]) {
+	if (isQueueNULL(q1) || isQueueNULL(q2))
+	{
+		printf("One of the queue is NULL\n");
+		return NULL;
+	}
+
+	Queue* mergedQueue = createQueue(name);
+
+	if (isQueueEmpty(q1) && isQueueEmpty(q2))
+	{
+		printf("Both queue is empty \n");
+		return mergedQueue;
+	}
+
+	QueueNode* iterator = q1->head;
+	
+	while (iterator != NULL) {
+		insertItem(mergedQueue, iterator->value);
+		iterator = iterator->next;
+	}
+
+	iterator = q2->head;
+
+	while (iterator != NULL) {
+		insertItem(mergedQueue, iterator->value);
+		iterator = iterator->next;
+	}
+
+	return mergedQueue;
+}
+//-----------------------------------------------------------------------------
+//TODO: SOR BURAYI
+void clearQueue(Queue** queue) {
+	if (isQueueNULL(*queue)) {
+		printf("Queue is already NULL\n");
+		return;
+	}
+
+	QueueNode* iterator = (*queue)->head;
+	QueueNode* temp;
+
+	while (iterator != NULL) {
+		temp = iterator;
+		iterator = iterator->next;
+		free(temp);
+	}
+
+	free(*queue);
+	*queue = NULL;
 }
